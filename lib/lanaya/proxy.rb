@@ -38,9 +38,9 @@ module Lanaya
 
     def bind_on_finish
       on_finish do
+        current_interaction.session_id = current_session_id
         Http::InteractionList.add_interaction current_interaction
-        # reset the current interaction
-        @current_interaction = nil
+        reset!
       end
     end
 
@@ -48,16 +48,17 @@ module Lanaya
       @current_interaction ||= Http::Interaction.new
     end
 
+    def current_session_id
+      @current_session_id ||= UUID.generate
+    end
+
     def prepare_request_parser
       @request_parser = ::Http::Parser.new
       @request_parser.on_headers_complete = proc do
-        session = UUID.generate
-
         current_interaction.request = Http::Request.new(@request_parser)
-        puts "New session: #{session} (#{@request_parser.headers.inspect})"
 
         host, port = @request_parser.headers['Host'].split(':')
-        server session, :host => host, :port => (port || 80) #, :bind_host => conn.sock[0] - # for bind ip
+        server current_session_id, :host => host, :port => (port || 80)
 
         relay_to_servers @request_buffer
 
@@ -72,6 +73,13 @@ module Lanaya
         current_interaction.response = Http::Resonse.new(@response_parser, @response_body)
         @response_body.clear
       end
+    end
+
+    def reset!
+      @current_interaction = nil
+      @current_session_id = nil
+      @request_parser.reset!
+      @response_parser.reset!
     end
   end
 end

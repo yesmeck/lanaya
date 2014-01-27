@@ -27,6 +27,9 @@ class Lanaya
           @addInteraction interaction
       )
 
+  haveInteraction: (interaction) ->
+    false
+
   addInteraction: (interaction) ->
     console.log(interaction)
 

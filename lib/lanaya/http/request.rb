@@ -4,19 +4,17 @@ module Lanaya
       attr_reader :method, :uri, :headers
 
       def initialize(http_parser)
-        @http_paser = http_parser
+        @method = http_parser.http_method
+        @uri = URI(http_parser.request_url)
+        @headers = http_parser.headers
       end
 
-      def method
-        @method ||= @http_paser.http_method
-      end
-
-      def uri
-        @uri ||= @http_paser.request_url.split(':').last
-      end
-
-      def headers
-        @uri ||= @http_paser.headers
+      def to_hash
+        {
+          method: method,
+          uri: uri,
+          headers: headers
+        }
       end
     end
   end
