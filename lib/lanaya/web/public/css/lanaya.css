@@ -6,6 +6,10 @@
   width: 100%;
 }
 
+#interactions .columns {
+  padding: 0;
+}
+
 .interaction {
   cursor: pointer;
 }

@@ -12,15 +12,6 @@
           </tr>
         </thead>
         <tbody>
-        <% @records.each do |record| %>
-          <tr class="interaction" data-name="<%= record.name %>" >
-            <td><%= record.request.uri %></td>
-            <td><%= record.request.method.upcase %></td>
-            <td><%= record.response.status.code %></td>
-            <td><%= record.response.headers['Content-Type'] && record.response.headers['Content-Type'].first.split(';').first %></td>
-            <td><%= record.recorded_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
-          </tr>
-        <% end %>
         </tbody>
       </table>
     </div>

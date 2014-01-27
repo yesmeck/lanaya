@@ -28,10 +28,20 @@ class Lanaya
       )
 
   haveInteraction: (interaction) ->
-    false
+    $("#interaction-#{interaction.session_id}").length > 0
 
   addInteraction: (interaction) ->
     console.log(interaction)
+    html = """
+      <tr id="interaction-#{interaction.session_id}" class="interaction" >
+        <td>#{interaction.request.uri}</td>
+        <td>#{interaction.request.method}</td>
+        <td>#{interaction.response.status_code}</td>
+        <td>#{interaction.response.content_type}</td>
+        <td>#{interaction.requested_at }</td>
+      </tr>
+    """
+    $('#interactions table tbody').append(html)
 
 
 jQuery ->
