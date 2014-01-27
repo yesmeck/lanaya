@@ -11,8 +11,10 @@ module Lanaya
   class Proxy < EventMachine::ProxyServer::Connection
     def initialize(*args)
       super
-      @buffer = ''
-      prepare_http_parser
+      @request_buffer = ''
+      @response_body = ''
+      prepare_request_parser
+      prepare_response_parser
       bind_on_data
       bind_on_response
       bind_on_finish
@@ -21,19 +23,15 @@ module Lanaya
     def bind_on_data
       on_data do |data|
         current_interaction.requested_at = Time.now
-        @buffer << data
-        @http_parser << data
+        @request_buffer << data
+        @request_parser << data
         data
       end
     end
 
     def bind_on_response
       on_response do |backend, resp|
-        response_parser = ::Http::Parser.new
-        body = ''
-        response_parser.on_body = proc { |chunck| body << chunck  }
-        response_parser << resp
-        current_interaction.response = Http::Resonse.new(response_parser, body)
+        @response_parser << resp
         resp
       end
     end
@@ -50,20 +48,29 @@ module Lanaya
       @current_interaction ||= Http::Interaction.new
     end
 
-    def prepare_http_parser
-      @http_parser = ::Http::Parser.new
-      @http_parser.on_headers_complete = proc do
+    def prepare_request_parser
+      @request_parser = ::Http::Parser.new
+      @request_parser.on_headers_complete = proc do
         session = UUID.generate
 
-        current_interaction.request = Http::Request.new(@http_parser)
-        puts "New session: #{session} (#{@http_parser.headers.inspect})"
+        current_interaction.request = Http::Request.new(@request_parser)
+        puts "New session: #{session} (#{@request_parser.headers.inspect})"
 
-        host, port = @http_parser.headers['Host'].split(':')
+        host, port = @request_parser.headers['Host'].split(':')
         server session, :host => host, :port => (port || 80) #, :bind_host => conn.sock[0] - # for bind ip
 
-        relay_to_servers @buffer
+        relay_to_servers @request_buffer
 
-        @buffer.clear
+        @request_buffer.clear
+      end
+    end
+
+    def prepare_response_parser
+      @response_parser = ::Http::Parser.new
+      @response_parser.on_body = proc { |chunck| @response_body << chunck }
+      @response_parser.on_message_complete = proc do
+        current_interaction.response = Http::Resonse.new(@response_parser, @response_body)
+        @response_body.clear
       end
     end
   end
