@@ -1,6 +1,7 @@
 require 'em-proxy'
 require 'http/parser'
 require 'uuid'
+require 'thin'
 require 'lanaya/request'
 require 'lanaya/response'
 
