@@ -1,4 +1,7 @@
 require 'pry'
+require 'json'
+require 'lanaya/version'
+require 'lanaya/events'
 require 'lanaya/proxy'
 require 'lanaya/web'
 

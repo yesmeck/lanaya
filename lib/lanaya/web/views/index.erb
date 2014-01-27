@@ -1,1 +1,45 @@
-<h1>Lanaya</h1>
+<div class="large-12 columns">
+  <div id="interactions" class="row">
+    <div class="large-12 columns">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Method</th>
+            <th>Status</th>
+            <th>Type</th>
+            <th>Requested At</th>
+          </tr>
+        </thead>
+        <tbody>
+        <% @records.each do |record| %>
+          <tr class="interaction" data-name="<%= record.name %>" >
+            <td><%= record.request.uri %></td>
+            <td><%= record.request.method.upcase %></td>
+            <td><%= record.response.status.code %></td>
+            <td><%= record.response.headers['Content-Type'] && record.response.headers['Content-Type'].first.split(';').first %></td>
+            <td><%= record.recorded_at.strftime('%Y-%m-%d %H:%M:%S') %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="interaction-detail" class="row">
+    <div id="drag-bar"></div>
+    <div class="large-12 columns">
+      <dl class="tabs" data-tab>
+        <dd class="active"><a href="#headers">Headers</a></dd>
+        <dd><a href="#preview">Preview</a></dd>
+        <dd><a href="#response">Response</a></dd>
+      </dl>
+      <div class="tabs-content">
+        <div class="content active" id="headers"></div>
+        <div class="content" id="preview"></div>
+        <div class="content" id="response"></div>
+      </div>
+    </div>
+  </div>
+</div>
+

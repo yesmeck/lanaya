@@ -1,0 +1,53 @@
+#container {
+  max-width: none;
+}
+
+#interactions table {
+  width: 100%;
+}
+
+.interaction {
+  cursor: pointer;
+}
+
+.interaction:hover {
+  background: #F1F0F0;
+}
+
+#interaction-detail {
+  position: fixed;
+  display: none;
+  bottom: 0;
+  background: #fff;
+  width: 100%;
+}
+
+#interaction-detail .columns {
+  padding: 0;
+}
+
+#interaction-detail .tabs dd > a {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+#interaction-detail .tabs-content .content {
+  height: 250px;
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  overflow: auto;
+}
+
+#drag-bar{
+  position: absolute;
+  width: 100%;
+  height: 5px;
+  background-color: #444;
+  top: -5px;
+  cursor: pointer;
+}
+
+iframe {
+  border: none;
+}
