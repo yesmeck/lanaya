@@ -1,50 +1,54 @@
 require 'em-proxy'
 require 'http/parser'
 require 'uuid'
-require 'pry'
 require 'lanaya/request'
 require 'lanaya/response'
 
 module Lanaya
-  class Proxy < Proxy
-    class << self
-      def run!(host: '0.0.0.0', port: 9889)
-        start(:host => host, :port => port) do |conn|
+  class Proxy < EventMachine::ProxyServer::Connection
+    def initialize(*args)
+      super
+      @buffer = ''
+      prepare_http_parser
+      bind_on_data
+      bind_on_response
+    end
 
-          @http_paser = Http::Parser.new
-          @http_paser.on_headers_complete = proc do
-            session = UUID.generate
+    def bind_on_data
+      on_data do |data|
+        @buffer << data
+        @http_parser << data
+        data
+      end
+    end
 
-            request = Request.new(@http_paser)
-            puts "New session: #{session} (#{@http_paser.headers.inspect})"
+    def bind_on_response
+      on_response do |backend, resp|
+        response_parser = Http::Parser.new
+        body = ''
+        response_parser.on_body = proc { |chunck| body << chunck  }
+        response_parser << resp
+        response = Resonse.new(response_parser, body)
+        resp
+      end
+    end
 
-            host, port = @http_paser.headers['Host'].split(':')
-            conn.server session, :host => host, :port => (port || 80) #, :bind_host => conn.sock[0] - # for bind ip
+    def prepare_http_parser
+      @http_parser = Http::Parser.new
+      @http_parser.on_headers_complete = proc do
+        session = UUID.generate
 
-            conn.relay_to_servers @buffer
+        request = Request.new(@http_parser)
+        puts "New session: #{session} (#{@http_parser.headers.inspect})"
 
-            @buffer.clear
-          end
+        host, port = @http_parser.headers['Host'].split(':')
+        server session, :host => host, :port => (port || 80) #, :bind_host => conn.sock[0] - # for bind ip
 
-          @buffer = ''
+        relay_to_servers @buffer
 
-          conn.on_data do |data|
-            @buffer << data
-            @http_paser << data
-
-            data
-          end
-
-          conn.on_response do |backend, resp|
-            response_parser = Http::Parser.new
-            body = ''
-            response_parser.on_body = proc { |chunck| body << chunck  }
-            response_parser << resp
-            response = Resonse.new(response_parser, body)
-            resp
-          end
-        end
+        @buffer.clear
       end
     end
   end
 end
+
