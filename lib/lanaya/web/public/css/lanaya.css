@@ -1,3 +1,7 @@
+html, body {
+  height: 100%;
+}
+
 #container {
   max-width: none;
 }
@@ -21,35 +25,54 @@
 #interaction-detail {
   position: fixed;
   display: none;
-  bottom: 0;
+  top: 0;
+  right: 0;
   background: #fff;
-  width: 100%;
+  width: 70%;
+  height: 100%;
+  border-left: 1px solid #ccc;
+}
+
+#interaction-detail ul {
+  list-style: none;
 }
 
 #interaction-detail .columns {
   padding: 0;
+  margin-top: 10px;
 }
 
-#interaction-detail .tabs dd > a {
+#interaction-detail dl.tabs {
+  border-bottom: 1px solid #ccc;
+}
+
+#interaction-detail dl.tabs dd > a {
+  background: #fff;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
 
+#interaction-detail dl.tabs dd.active {
+  border: 1px solid #ccc;
+  border-bottom: none;
+}
+
+#interaction-detail a.close {
+  display: block;
+  float: left;
+  color: #222;
+  width: 45px;
+  text-align: center;
+  height: 34px;
+  line-height: 30px;
+}
+
 #interaction-detail .tabs-content .content {
-  height: 250px;
+  height: 100%;
   width: 100%;
   padding-left: 1rem;
   padding-right: 1rem;
   overflow: auto;
-}
-
-#drag-bar{
-  position: absolute;
-  width: 100%;
-  height: 5px;
-  background-color: #444;
-  top: -5px;
-  cursor: pointer;
 }
 
 iframe {

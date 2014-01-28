@@ -8,11 +8,11 @@ module Lanaya
       include Singleton
 
       def initialize
-        @interactions = []
+        @interactions = {}
       end
 
       def add_interaction(interaction)
-        @interactions << interaction
+        @interactions[interaction.session_id] = interaction
         EventMachine.next_tick do
           Lanaya::Events::HttpInteractionAdded.push interaction
         end
@@ -20,6 +20,10 @@ module Lanaya
 
       def to_json
         JSON.generate @interactions
+      end
+
+      def [](session_id)
+        @interactions[session_id]
       end
 
       class << self

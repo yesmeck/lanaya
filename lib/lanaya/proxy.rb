@@ -70,7 +70,7 @@ module Lanaya
       @response_parser = ::Http::Parser.new
       @response_parser.on_body = proc { |chunck| @response_body << chunck }
       @response_parser.on_message_complete = proc do
-        current_interaction.response = Http::Response.new(@response_parser, @response_body)
+        current_interaction.response = Http::Response.new(@response_parser, @response_body.dup)
         @response_body.clear
       end
     end

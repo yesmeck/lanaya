@@ -1,7 +1,7 @@
 module Lanaya
   module Http
     class Response
-      attr_reader :status_code, :headers, :http_version
+      attr_reader :status_code, :headers, :http_version, :body
 
       def initialize(http_parser, body)
         @status_code = http_parser.status_code

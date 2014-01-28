@@ -20,6 +20,10 @@ module Lanaya
       erb :index
     end
 
+    get '/:session_id/response_body' do |session_id|
+      Lanaya::Http::InteractionList[session_id].response.body
+    end
+
     get '/interactions' do
       if request.websocket?
         request.websocket!(on_start: proc do |websocket|
