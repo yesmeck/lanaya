@@ -1,3 +1,5 @@
+require 'active_support/core_ext/numeric/conversions'
+
 module Lanaya
   module Http
     class Response
@@ -14,11 +16,16 @@ module Lanaya
         headers['Content-Type'] ? headers['Content-Type'].split(';').first : ''
       end
 
+      def content_length
+        headers['Content-Length'] ? headers['Content-Length'].to_i.to_s(:human_size) : ''
+      end
+
       def to_hash
         {
           http_version: http_version,
           status_code: status_code,
           content_type: content_type,
+          content_length: content_length,
           headers: headers
         }
       end

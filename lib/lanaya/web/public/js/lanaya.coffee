@@ -115,6 +115,7 @@ class Lanaya
         <td>#{interaction.request.method}</td>
         <td>#{interaction.response.status_code}</td>
         <td>#{interaction.response.content_type}</td>
+        <td>#{interaction.response.content_length}</td>
         <td>#{interaction.requested_at }</td>
       </tr>
     """
