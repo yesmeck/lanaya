@@ -14,9 +14,15 @@ class Lanaya
       interaction = $(this).data()
       _this.displayInterationDetail(interaction)
       $('#interaction-detail').data('session-id', interaction.session_id).show()
+      $content = $('#interaction-detail .content')
+      $content.css('height', $content.outerHeight())
 
     $('#interaction-detail .close').on 'click', (event) ->
       $('#interaction-detail').hide()
+
+    $(window).on 'resize', ->
+      $content = $('#interaction-detail .content')
+      $content.css('height', $content.outerHeight())
 
   displayInterationDetail: (interaction) ->
     @displayInteractionHeaders(interaction)

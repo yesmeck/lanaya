@@ -73,6 +73,7 @@ html, body {
   padding-left: 1rem;
   padding-right: 1rem;
   overflow: auto;
+  word-wrap: break-word;
 }
 
 iframe {
