@@ -6,7 +6,7 @@ module Lanaya
           session_id: session_id,
           request: request.to_hash,
           response: response.to_hash,
-          requested_at: requested_at
+          requested_at: requested_at.strftime('%Y-%m-%d %H:%M:%S')
         }
       end
 
