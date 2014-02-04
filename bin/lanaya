@@ -5,8 +5,7 @@ $:.unshift File.expand_path('../../lib', __FILE__)
 
 require 'lanaya'
 
-host = "0.0.0.0"
-port = 9889
-puts "listening on #{host}:#{port}..."
+puts '=> proxy: http://0.0.0.0:9889'
+puts '=> web: http://0.0.0.0:9888'
 
 Lanaya.run
