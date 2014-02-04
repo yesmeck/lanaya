@@ -1,6 +1,6 @@
 # Lanaya
 
-TODO: Write a gem description
+A HTTP debugger
 
 ## Installation
 
